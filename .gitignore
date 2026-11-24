@@ -1,0 +1,17 @@
+# Swift Package Manager & Build Outputs
+.build/
+build/
+.swiftpm/
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
+
+# macOS & Editor Files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Local Environment & Secrets
+.env
+.env.*
