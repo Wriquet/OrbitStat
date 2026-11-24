@@ -43,7 +43,7 @@ A lightweight, native SwiftUI + AppKit macOS menu bar monitor for Apple Silicon 
 
 ```bash
 # 克隆仓库 / Clone repository
-git clone https://github.com/Qsker/OrbitStat.git
+git clone https://github.com/Wriquet/OrbitStat.git
 cd OrbitStat
 
 # 编译（严格模式）/ Build
@@ -91,4 +91,4 @@ OrbitStat/
 
 ## License
 
-[MIT](LICENSE) © 2026 Qsker
+[MIT](LICENSE) © 2026 Wriquet
