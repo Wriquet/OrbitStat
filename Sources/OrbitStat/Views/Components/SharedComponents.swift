@@ -122,12 +122,14 @@ public struct LiquidGlassShellBackground: View {
 }
 
 /// Independent macOS Control Center module tile using 100% official `.glassEffect` on macOS 26+
-/// (zero hand-painted gray fill, zero custom specular rim or shadow; clean `.ultraThinMaterial`
+/// with a subtle native floating elevation shadow (zero fake gray fills; `.ultraThinMaterial`
 /// fallback on macOS 14–15).
 public struct GlassTile<Content: View>: View {
     public let cornerRadius: CGFloat
     public let tint: Color?
     private let content: Content
+
+    @Environment(\.colorScheme) private var colorScheme
 
     public init(
         cornerRadius: CGFloat = 20,
@@ -141,12 +143,14 @@ public struct GlassTile<Content: View>: View {
 
     public var body: some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        let shadowOpacity = colorScheme == .dark ? 0.18 : 0.06
 
         if #available(macOS 26.0, *) {
             let glass: Glass = tint.map { .regular.tint($0) } ?? .regular
             content
                 .frame(maxWidth: .infinity, alignment: .topLeading)
                 .glassEffect(glass, in: shape)
+                .shadow(color: Color.black.opacity(shadowOpacity), radius: 6, x: 0, y: 2)
         } else {
             content
                 .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -154,6 +158,7 @@ public struct GlassTile<Content: View>: View {
                 .overlay(
                     shape.strokeBorder(Color.primary.opacity(0.10), lineWidth: 0.5)
                 )
+                .shadow(color: Color.black.opacity(shadowOpacity), radius: 6, x: 0, y: 2)
         }
     }
 }
@@ -262,12 +267,24 @@ public struct NativeTabCapsuleBar: View {
             GlassEffectContainer(spacing: 4) {
                 row
                     .glassEffect(.regular, in: trackShape)
+                    .shadow(
+                        color: Color.black.opacity(colorScheme == .dark ? 0.16 : 0.05),
+                        radius: 5,
+                        x: 0,
+                        y: 1.5
+                    )
             }
         } else {
             row
                 .background(.ultraThinMaterial, in: trackShape)
                 .overlay(
                     trackShape.strokeBorder(Color.primary.opacity(0.10), lineWidth: 0.5)
+                )
+                .shadow(
+                    color: Color.black.opacity(colorScheme == .dark ? 0.16 : 0.05),
+                    radius: 5,
+                    x: 0,
+                    y: 1.5
                 )
         }
     }
@@ -363,6 +380,7 @@ public struct NativeCapsuleButton: View {
     public let tint: Color?
     public let action: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
     @ViewState private var isHovered: Bool = false
 
     public init(
@@ -411,16 +429,20 @@ public struct NativeCapsuleButton: View {
         .frame(maxWidth: expand ? .infinity : nil)
         .frame(height: compact ? 28 : 32)
 
+        let shadowOpacity = colorScheme == .dark ? 0.16 : 0.05
+
         if #available(macOS 26.0, *) {
             let glass: Glass = tint.map { .regular.tint($0).interactive() } ?? .regular.interactive()
             content
                 .glassEffect(glass, in: shape)
+                .shadow(color: Color.black.opacity(shadowOpacity), radius: 5, x: 0, y: 1.5)
         } else {
             content
                 .background(.ultraThinMaterial, in: shape)
                 .overlay(
                     shape.strokeBorder(Color.primary.opacity(0.10), lineWidth: 0.5)
                 )
+                .shadow(color: Color.black.opacity(shadowOpacity), radius: 5, x: 0, y: 1.5)
         }
     }
 }
@@ -485,18 +507,22 @@ public struct NativeCircleIconButton: View {
             )
             .frame(width: size, height: size)
 
+        let shadowOpacity = colorScheme == .dark ? 0.16 : 0.05
+
         if #available(macOS 26.0, *) {
             let glass: Glass = isActive
                 ? .regular.tint(accent.opacity(colorScheme == .dark ? 0.26 : 0.16)).interactive()
                 : .regular.interactive()
             content
                 .glassEffect(glass, in: shape)
+                .shadow(color: Color.black.opacity(shadowOpacity), radius: 5, x: 0, y: 1.5)
         } else {
             content
                 .background(.ultraThinMaterial, in: shape)
                 .overlay(
                     shape.strokeBorder(Color.primary.opacity(0.10), lineWidth: 0.5)
                 )
+                .shadow(color: Color.black.opacity(shadowOpacity), radius: 5, x: 0, y: 1.5)
         }
     }
 }
@@ -509,6 +535,8 @@ public struct NativeGlassCapsulePill: View {
     public let systemImage: String?
     public let height: CGFloat
 
+    @Environment(\.colorScheme) private var colorScheme
+
     public init(text: String, systemImage: String? = nil, height: CGFloat = 28) {
         self.text = text
         self.systemImage = systemImage
@@ -517,6 +545,7 @@ public struct NativeGlassCapsulePill: View {
 
     public var body: some View {
         let shape = Capsule(style: .continuous)
+        let shadowOpacity = colorScheme == .dark ? 0.16 : 0.05
         let content = HStack(spacing: 5) {
             if let systemImage {
                 Image(systemName: systemImage)
@@ -533,12 +562,14 @@ public struct NativeGlassCapsulePill: View {
         if #available(macOS 26.0, *) {
             content
                 .glassEffect(.regular, in: shape)
+                .shadow(color: Color.black.opacity(shadowOpacity), radius: 5, x: 0, y: 1.5)
         } else {
             content
                 .background(.ultraThinMaterial, in: shape)
                 .overlay(
                     shape.strokeBorder(Color.primary.opacity(0.10), lineWidth: 0.5)
                 )
+                .shadow(color: Color.black.opacity(shadowOpacity), radius: 5, x: 0, y: 1.5)
         }
     }
 }

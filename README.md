@@ -2,14 +2,14 @@
 
 轻量级原生 macOS 菜单栏系统与电源监控工具（SwiftUI + AppKit），专为 Apple Silicon 打造，支持 macOS 26+ 官方 **Liquid Glass（液态玻璃）** 视觉风格（向下兼容 macOS 14+）。
 
-A lightweight, native SwiftUI + AppKit macOS menu bar monitor for Apple Silicon (macOS 14+, native macOS 26+ Liquid Glass `.glassEffect(.clear)` / `.glassEffect(.regular)`), featuring ~15 MB idle memory footprint, ~0% idle CPU usage, and zero root privileges required.
+A lightweight, native SwiftUI + AppKit macOS menu bar monitor for Apple Silicon (macOS 14+, native macOS 26+ Liquid Glass `.glassEffect(.regular)` with soft floating drop shadows), featuring ~15 MB idle memory footprint, ~0% idle CPU usage, and zero root privileges required.
 
 ---
 
 ## 核心特性 · Features
 
 - **超轻量架构 / Ultra-Lightweight**: 纯原生 Swift 实现，零 Electron / WebView 依赖；面板采用按需懒加载与关闭即释放策略，后台常驻物理内存占用约 **15 MB**，空闲 CPU **~0%**。
-- **官方液态玻璃界面 / Native Liquid Glass UI**: 基于 macOS 26+ 官方 `.glassEffect(.clear)` 透明外框与独立 `.glassEffect(.regular)` 悬浮模块卡片、原生 `Capsule` 胶囊控件与系统 SF Symbols 图标；macOS 14–15 自动回退至原生 `.ultraThinMaterial`。
+- **官方液态玻璃界面 / Native Liquid Glass UI**: 基于 macOS 26+ 官方 `.glassEffect(.regular)` 磨砂液态玻璃外框、双层柔和悬浮投影、独立 `.glassEffect(.regular)` 悬浮模块卡片、原生 `Capsule` 胶囊控件与系统 SF Symbols 图标；macOS 14–15 自动回退至原生 `.regularMaterial` / `.ultraThinMaterial`。
 - **免 Root 硬件采样 / Non-Root Hardware Telemetry**: 直接调用 IOKit HID/SMC、Mach `host_processor_info` / `host_statistics64`、`libproc` 与 `sysctl`，无需 `sudo` 或外部命令行子进程。
 
 ### 系统页 · System Tab
@@ -77,7 +77,7 @@ OrbitStat/
 │   │   └── PowerMonitor.swift            # 电池、整机功耗、适配器与耗能应用采集
 │   ├── State/MonitorStore.swift          # 状态管理、60 点历史缓存与轻量图标缓存
 │   └── Views/
-│       ├── RootPopoverView.swift         # 官方 .clear 液态玻璃主容器与导航栏
+│       ├── RootPopoverView.swift         # 官方 .regular 液态玻璃主容器、悬浮阴影与导航栏
 │       ├── SystemTabView.swift           # 系统监控页
 │       ├── PowerTabView.swift            # 电源监控页
 │       ├── SettingsView.swift            # 设置页

@@ -38,7 +38,7 @@ public struct RootPopoverView: View {
             }
         }
         .frame(width: Self.popoverWidth, height: panelHeight, alignment: .top)
-        .modifier(OfficialClearGlassShellModifier(cornerRadius: Self.shellCornerRadius))
+        .modifier(OfficialRegularGlassShellModifier(cornerRadius: Self.shellCornerRadius))
     }
 
     // MARK: - Main Control Center Layout Inside Official .clear Glass Frame
@@ -177,23 +177,29 @@ public struct RootPopoverView: View {
     }
 }
 
-// MARK: - Official Crystal-Clear Outer Liquid Glass Window Shell
+// MARK: - Official Frosted Regular Outer Liquid Glass Window Shell + Floating Shadow
 
-/// Applies Apple's official macOS 26+ `.glassEffect(.clear, in: RoundedRectangle(cornerRadius: 24))`
-/// outer window frame — delivering unmistakable luminous rounded borders, real optical edge lensing,
-/// and soft floating shadow with ZERO muddy gray opaque backdrop tint.
-private struct OfficialClearGlassShellModifier: ViewModifier {
+/// Applies Apple's official macOS 26+ `.glassEffect(.regular, in: RoundedRectangle(cornerRadius: 24))`
+/// outer window frame paired with a lush dual-layer macOS floating drop shadow (matching native
+/// macOS Tahoe Notification Center / Control Center panels: softly diffusing text behind it while
+/// lifting the entire glass surface cleanly off light cream and dark desktop windows).
+private struct OfficialRegularGlassShellModifier: ViewModifier {
     let cornerRadius: CGFloat
     @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        let ambientOpacity = colorScheme == .dark ? 0.45 : 0.16
+        let contactOpacity = colorScheme == .dark ? 0.22 : 0.06
+
         if #available(macOS 26.0, *) {
             content
-                .glassEffect(.clear, in: shape)
+                .glassEffect(.regular, in: shape)
+                .shadow(color: Color.black.opacity(ambientOpacity), radius: 22, x: 0, y: 10)
+                .shadow(color: Color.black.opacity(contactOpacity), radius: 5, x: 0, y: 2)
         } else {
             content
-                .background(.ultraThinMaterial, in: shape)
+                .background(.regularMaterial, in: shape)
                 .overlay(
                     shape.strokeBorder(
                         colorScheme == .dark ? Color.white.opacity(0.18) : Color.black.opacity(0.10),
@@ -201,6 +207,8 @@ private struct OfficialClearGlassShellModifier: ViewModifier {
                     )
                 )
                 .clipShape(shape)
+                .shadow(color: Color.black.opacity(ambientOpacity), radius: 22, x: 0, y: 10)
+                .shadow(color: Color.black.opacity(contactOpacity), radius: 5, x: 0, y: 2)
         }
     }
 }

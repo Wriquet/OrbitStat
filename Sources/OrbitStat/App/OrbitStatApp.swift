@@ -90,9 +90,10 @@ final class FloatingGlassRootView: NSView {
 }
 
 final class FloatingGlassPanel: NSPanel {
-    /// Transparent margin around the official `.clear` Liquid Glass shell so native SwiftUI
-    /// `.glassEffect` floating shadows bloom smoothly with zero square corner artifacts.
-    static let shadowPadding: CGFloat = 28
+    /// Generous transparent halo around the official `.regular` Liquid Glass shell so the
+    /// dual-layer floating drop shadow (`radius: 22, y: 10`) fades smoothly to 0% alpha well
+    /// before the window boundary — zero clipped shadow edges and zero square corner artifacts.
+    static let shadowPadding: CGFloat = 44
 
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }
@@ -766,23 +767,24 @@ private struct SnapshotBackdropView: View {
 
     private var lightAppWindowBackdrop: some View {
         ZStack(alignment: .topLeading) {
-            Color.white
+            // Warm cream desktop window surface (matching modern light workspace windows)
+            Color(red: 0.962, green: 0.950, blue: 0.922)
 
             VStack(alignment: .leading, spacing: 11) {
-                ForEach(0..<28, id: \.self) { line in
+                ForEach(0..<30, id: \.self) { line in
                     HStack(spacing: 10) {
                         Text(String(format: "%02d", line + 1))
                             .font(.system(size: 11.5, design: .monospaced))
                             .foregroundStyle(Color.black.opacity(0.24))
 
                         Text(codeSnippet(for: line))
-                            .font(.system(size: 12, design: .monospaced))
+                            .font(.system(size: 12.5, design: .monospaced))
                             .foregroundStyle(lightCodeColor(for: line))
                             .lineLimit(1)
                     }
                 }
             }
-            .padding(14)
+            .padding(16)
         }
     }
 
@@ -967,7 +969,7 @@ final class SnapshotRunner: NSObject, NSApplicationDelegate {
         style: SnapshotBackdropStyle
     ) -> (NSWindow, NSView, NSSize) {
         let appearance = NSAppearance(named: style.isDark ? .darkAqua : .aqua)
-        let backdropMargin: CGFloat = 28
+        let backdropMargin: CGFloat = 44
         let panelHeight = RootPopoverView.fixedPanelHeight
         let totalSize = NSSize(
             width: RootPopoverView.popoverWidth + backdropMargin * 2,
@@ -1017,7 +1019,7 @@ final class SnapshotRunner: NSObject, NSApplicationDelegate {
         let colorScheme: ColorScheme = style.isDark ? .dark : .light
         let screen = NSScreen.screens.first
         let screenFrame = screen?.frame ?? NSRect(x: 0, y: 0, width: 1440, height: 900)
-        let margin: CGFloat = 32
+        let margin: CGFloat = 48
         let panelW = RootPopoverView.popoverWidth
         let panelH = RootPopoverView.fixedPanelHeight
         let totalW = panelW + margin * 2
